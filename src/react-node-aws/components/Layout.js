@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
 import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 // Routers(indicator)
 Router.onRouteChangeStart = (url) => NProgress.start();
@@ -22,13 +23,7 @@ const Layout = ({ children }) => {
 				crossorigin="anonymous"
 			/>
 			{/* cdnjs (Routers が適応される) */}
-			<link
-				rel="stylesheet"
-				href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css"
-				integrity="sha512-42kB9yDlYiCEfx2xVwq0q7hT4uf26FUgSIZBK8uiaEnTdShXjwr8Ip1V4xGJMg3mHkUt9nNuTDxunHF0/EgxLQ=="
-				crossorigin="anonymous"
-				referrerpolicy="no-referrer"
-			/>
+			<link rel="stylesheet" href="/static/css/styles.css" />
 		</React.Fragment>
 	);
 	const nav = () => (
