@@ -13,9 +13,19 @@
 ### setup react nextjs client
 
 - [Getting started](https://nextjs.org/docs/getting-started)
+
   - '''
     npm init -y
     npm install -D next react react-dom
+    npm run dev
     '''
+  - page / index.js
+
+    - ```
+      const Home = () => {
+          return <div>hello next</div>;
+      };
+      export default Home;
+      ```
 
 #### [Return to Contents](#contents)
