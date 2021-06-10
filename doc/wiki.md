@@ -27,6 +27,9 @@
     export default Home;
     ```
 
+- links
+  - [Next.js でのサイト内ページ遷移方法](https://qiita.com/IYA_UFO/items/f13577bad7dd9ef1ae89)
+
 ### Bootstrap
 
 - [Bootstrap/CSS](https://getbootstrap.com/docs/5.0/getting-started/introduction/#css)
