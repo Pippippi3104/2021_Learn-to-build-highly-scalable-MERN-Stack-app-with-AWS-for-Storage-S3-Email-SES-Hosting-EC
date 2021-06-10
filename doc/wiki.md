@@ -12,13 +12,15 @@
 
 ### setup react nextjs client
 
-- [Getting started](https://nextjs.org/docs/getting-started)
+- How to init Nextjs
 
-  - '''
+  - [Getting started](https://nextjs.org/docs/getting-started)
+
+  - ```
     npm init -y
     npm install -D next react react-dom
     npm run dev
-    '''
+    ```
   - page / index.js
 
     - ```
