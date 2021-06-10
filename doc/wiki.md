@@ -2,32 +2,34 @@
 
 ## Contents
 
-### React / Next Js Client
+- [React / Next Js Client](#sec02)
 
-- [setup react nextjs client](#les05)
+<a id="#sec02"></a>
 
 ## React / Next Js Client
 
-<a id="#les05"></a>
+### How to init Nextjs
 
-### setup react nextjs client
-
-- How to init Nextjs
-
-  - [Getting started](https://nextjs.org/docs/getting-started)
+- [Getting started](https://nextjs.org/docs/getting-started)
 
   - ```
     npm init -y
     npm install -D next react react-dom
     npm run dev
     ```
-  - page / index.js
 
-    - ```
-      const Home = () => {
-          return <div>hello next</div>;
-      };
-      export default Home;
-      ```
+- page / index.js
+
+  - ```
+    const Home = () => {
+      return <div>hello next</div>;
+    };
+    export default Home;
+    ```
+
+### Bootstrap
+
+- [Bootstrap/CSS](https://getbootstrap.com/docs/5.0/getting-started/introduction/#css)
+  - Copy-paste the stylesheet <link> into your <head> before all other stylesheets to load our CSS.
 
 #### [Return to Contents](#contents)
