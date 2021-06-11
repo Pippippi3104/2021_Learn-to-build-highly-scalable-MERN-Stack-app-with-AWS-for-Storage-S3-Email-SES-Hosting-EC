@@ -95,12 +95,17 @@
 
 ### files
 
-- server.js
-  - routes などを import し、それらの middleware を実行する
-- routes
-  - controllers 内の動作を middleware として関数にまとめる
-- controllers
-  - 具体的な動作
+- client
+  - web page
+    - 任意のアドレスへデータを送信する
+- server
+  - server.js
+    - routes などを import し、それらの middleware を実行する
+    - client からデータを受け取り、routes へ流す
+  - routes
+    - controllers 内の動作を middleware として関数にまとめる
+  - controllers
+    - 具体的な動作
 
 ### mongoose
 
@@ -112,5 +117,13 @@
 
 - links
   - [mongoose](https://mongoosejs.com/)
+
+### mongoDB
+
+- link
+  - [HP](https://cloud.mongodb.com/)
+- test account
+  - udemy
+  - 111111111!Qq
 
 #### [Return to Contents](#contents)
