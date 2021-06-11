@@ -3,6 +3,7 @@
 ## Contents
 
 - [React / Next Js Client](#sec02)
+- [Node Js API](#sec03)
 
 <a id="#sec02"></a>
 
@@ -46,5 +47,83 @@
 
 - [NProgress](https://www.npmjs.com/package/nprogress)
 - [別プロジェクトに Next.js を追加した時の TypeError: Cannot read property 'tap' of undefined エラーの解消法](https://qiita.com/faronan/items/a017d53a8405a44544f2)
+
+#### [Return to Contents](#contents)
+
+<a id="#sec03"></a>
+
+## Node Js API
+
+### setup server
+
+- init
+  - ```
+    cd server
+    npm init -y
+    npm i -D express nodemon
+    ```
+- add file (server.js)
+  - ```
+    const express = require("express");
+    const app = express();
+    app.get("/api/register", (req, res) => {
+        res.json({
+            data: "you hit register endpoint",
+        });
+    });
+    const port = process.env.PORT || 8000;
+    app.listen(port, () => console.log(`API is running on port ${port}`));
+    ```
+- run server
+  - ```
+    node server.js
+    ```
+  - http://localhost:8000/api/register
+- start server
+  - add to script
+    - "start": "nodemon server.js",
+  - run
+    - ```
+      npm run start
+      ```
+- others
+  - ```
+    npm i -D body-parser cors dotenv express-jwt express-validator jsonwebtoken aws-sdk
+    npm i -D morgan
+    npm i -D axios
+    ```
+
+### files
+
+- client
+  - web page
+    - 任意のアドレスへデータを送信する
+- server
+  - server.js
+    - routes などを import し、それらの middleware を実行する
+    - client からデータを受け取り、routes へ流す
+  - routes
+    - controllers 内の動作を middleware として関数にまとめる
+  - controllers
+    - 具体的な動作
+
+### mongoose
+
+- install
+
+  - ```
+    npm i -D mongoose
+    ```
+
+- links
+  - [mongoose](https://mongoosejs.com/)
+
+### mongoDB
+
+- link
+  - [HP](https://cloud.mongodb.com/)
+- test account
+  - udemy
+  - 111111111!Qq
 
 #### [Return to Contents](#contents)
