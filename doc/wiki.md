@@ -3,6 +3,7 @@
 ## Contents
 
 - [React / Next Js Client](#sec02)
+- [Node Js API](#sec03)
 
 <a id="#sec02"></a>
 
@@ -46,5 +47,44 @@
 
 - [NProgress](https://www.npmjs.com/package/nprogress)
 - [別プロジェクトに Next.js を追加した時の TypeError: Cannot read property 'tap' of undefined エラーの解消法](https://qiita.com/faronan/items/a017d53a8405a44544f2)
+
+#### [Return to Contents](#contents)
+
+<a id="#sec03"></a>
+
+## Node Js API
+
+### setup server
+
+- init
+  - ```
+    cd server
+    npm init -y
+    npm i -D express nodemon
+    ```
+- add file (server.js)
+  - ```
+    const express = require("express");
+    const app = express();
+    app.get("/api/register", (req, res) => {
+        res.json({
+            data: "you hit register endpoint",
+        });
+    });
+    const port = process.env.PORT || 8000;
+    app.listen(port, () => console.log(`API is running on port ${port}`));
+    ```
+- run server
+  - ```
+    node server.js
+    ```
+  - http://localhost:8000/api/register
+- start server
+  - add to script
+    - "start": "nodemon server.js",
+  - run
+    - ```
+      npm run start
+      ```
 
 #### [Return to Contents](#contents)
