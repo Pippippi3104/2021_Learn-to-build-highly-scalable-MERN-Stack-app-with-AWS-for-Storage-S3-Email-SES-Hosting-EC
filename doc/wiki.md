@@ -90,6 +90,7 @@
   - ```
     npm i -D body-parser cors dotenv express-jwt express-validator jsonwebtoken aws-sdk
     npm i -D morgan
+    npm i -D axios
     ```
 
 ### files
