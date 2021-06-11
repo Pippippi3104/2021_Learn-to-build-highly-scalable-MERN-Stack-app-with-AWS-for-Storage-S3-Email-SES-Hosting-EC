@@ -1,5 +1,4 @@
 exports.register = (req, res) => {
-	res.json({
-		data: "you hit register endpoint middleware... using controllers",
-	});
+	// clientから受け取ったデータがroute経由で受け取れる
+	console.log("REGISTER CONTROLLER", req.body);
 };
