@@ -87,4 +87,24 @@
       npm run start
       ```
 
+### files
+
+- server.js
+  - routes などを import し、それらの middleware を実行する
+- routes
+  - controllers 内の動作を middleware として関数にまとめる
+- controllers
+  - 具体的な動作
+
+### mongoose
+
+- install
+
+  - ```
+    npm i -D mongoose
+    ```
+
+- links
+  - [mongoose](https://mongoosejs.com/)
+
 #### [Return to Contents](#contents)
