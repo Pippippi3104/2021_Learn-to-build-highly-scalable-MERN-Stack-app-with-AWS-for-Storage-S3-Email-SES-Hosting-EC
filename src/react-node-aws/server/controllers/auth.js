@@ -43,14 +43,16 @@ exports.register = (req, res) => {
 		sendEmailOnRegister
 			.then((data) => {
 				console.log("email submitted to SES", data);
+				// response される data に message を追加する
 				res.json({
 					message: `Email has been sent to ${email}, Follow the instruction to complete your registration`,
 				});
 			})
 			.catch((error) => {
 				console.log("ses email on register", error);
+				// response される data に message を追加する
 				res.json({
-					error: `We could not verify your email. Please try again`,
+					message: `We could not verify your email. Please try again`,
 				});
 			});
 	});
