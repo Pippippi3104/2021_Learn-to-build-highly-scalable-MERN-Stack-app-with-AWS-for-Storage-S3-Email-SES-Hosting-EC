@@ -2,6 +2,8 @@ import Layout from "../components/Layout";
 import { useState } from "react";
 import axios from "axios";
 
+import { showSuccessMessage, showErrorMessage } from "../helpers/alerts";
+
 const Register = () => {
 	// state
 	const [state, setState] = useState({
@@ -26,6 +28,10 @@ const Register = () => {
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
+
+		// send の pending
+		setState({ ...state, buttonText: "Registering" });
+
 		// console.table({ name, email, password });
 		// serverへデータを送信
 		axios
@@ -34,8 +40,25 @@ const Register = () => {
 				email,
 				password,
 			})
-			.then((response) => console.log(response))
-			.catch((error) => console.log(error));
+			.then((response) => {
+				console.log(response);
+				setState({
+					...state,
+					name: "",
+					email: "",
+					password: "",
+					buttonText: "Submitted",
+					success: response.data.message, // server の auth controller にてメッセージが追加されている
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+				setState({
+					...state,
+					buttonText: "Register",
+					error: error.response.data.error, // server の auth controller にてメッセージが追加されている
+				});
+			});
 	};
 
 	// components
@@ -77,12 +100,17 @@ const Register = () => {
 	// main screen
 	return (
 		<Layout>
+			{/* main screen components */}
 			<div className="col-md-6 offset-md-3">
 				<h1>Register</h1>
 				<br />
+
+				{/* alert message */}
+				{success && showSuccessMessage(success)}
+				{error && showErrorMessage(error)}
+
+				{/* forms */}
 				{registerForm()}
-				<hr />
-				{JSON.stringify(state)}
 			</div>
 		</Layout>
 	);
