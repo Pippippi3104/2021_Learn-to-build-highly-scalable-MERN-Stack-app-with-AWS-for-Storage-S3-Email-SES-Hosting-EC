@@ -26,39 +26,36 @@ const Register = () => {
 			buttonText: "Regiser",
 		});
 	};
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		// send の pending
 		setState({ ...state, buttonText: "Registering" });
 
-		// console.table({ name, email, password });
 		// serverへデータを送信
-		axios
-			.post("http://localhost:8000/api/register", {
+		try {
+			const response = await axios.post("http://localhost:8000/api/register", {
 				name,
 				email,
 				password,
-			})
-			.then((response) => {
-				console.log(response);
-				setState({
-					...state,
-					name: "",
-					email: "",
-					password: "",
-					buttonText: "Submitted",
-					success: response.data.message, // server の auth controller にてメッセージが追加されている
-				});
-			})
-			.catch((error) => {
-				console.log(error);
-				setState({
-					...state,
-					buttonText: "Register",
-					error: error.response.data.error, // server の auth controller にてメッセージが追加されている
-				});
 			});
+			console.log(response);
+			setState({
+				...state,
+				name: "",
+				email: "",
+				password: "",
+				buttonText: "Submitted",
+				success: response.data.message, // server の auth controller にてメッセージが追加されている
+			});
+		} catch (error) {
+			console.log(error);
+			setState({
+				...state,
+				buttonText: "Register",
+				error: error.response.data.error, // server の auth controller にてメッセージが追加されている
+			});
+		}
 	};
 
 	// components
