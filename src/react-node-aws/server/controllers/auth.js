@@ -1,4 +1,6 @@
 const AWS = require("aws-sdk");
+const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 /// AWS setting
 AWS.config.update({
@@ -14,38 +16,60 @@ const ses = new AWS.SES({ apiVersion: "2010-12-01" });
 exports.register = (req, res) => {
 	// clientから受け取ったデータがroute経由で受け取れる
 	// console.log("REGISTER CONTROLLER", req.body);
-
-	// 内容
 	const { name, email, password } = req.body;
-	const params = {
-		Source: process.env.EMAIL_FROM,
-		Destination: {
-			ToAddresses: [email],
-		},
-		ReplyToAddresses: [process.env.EMAIL_TO],
-		Message: {
-			Body: {
-				Html: {
+
+	// check if user exists in our DB
+	User.findOne({ email }).exec((err, user) => {
+		if (user) {
+			return res.status(400).json({
+				error: "Email is taken",
+			});
+		}
+		// generate token with user name email and password
+		const token = jwt.sign(
+			{ name, email, password },
+			process.env.JWT_ACCOUNT_ACTIVATE,
+			{
+				expiresIn: "10m",
+			}
+		);
+
+		// send email (content)
+		const params = {
+			Source: process.env.EMAIL_FROM,
+			Destination: {
+				ToAddresses: [email],
+			},
+			ReplyToAddresses: [process.env.EMAIL_TO],
+			Message: {
+				Body: {
+					Html: {
+						Charset: "UTF-8",
+						Data: `
+							<html>
+								<h1>Verify your email address</h1>
+								<p>Please use the following link to complete your registration:</p>
+								<p>${process.env.CLIENT_URL}/auth/activate/${token}</p>
+							</html>`,
+					},
+				},
+				Subject: {
 					Charset: "UTF-8",
-					Data: `<html><body><h1>Hello ${name}</h1 style="color:red;"><p>Test email</p></body></html>`,
+					Data: "Complete your registration",
 				},
 			},
-			Subject: {
-				Charset: "UTF-8",
-				Data: "Complete your registration",
-			},
-		},
-	};
+		};
 
-	// 送信
-	const sendEmailOnRegister = ses.sendEmail(params).promise();
-	sendEmailOnRegister
-		.then((data) => {
-			console.log("email submitted to SES", data);
-			res.send("Email sent");
-		})
-		.catch((error) => {
-			console.log("ses email on register", error);
-			res.send("email failed");
-		});
+		// send email
+		const sendEmailOnRegister = ses.sendEmail(params).promise();
+		sendEmailOnRegister
+			.then((data) => {
+				console.log("email submitted to SES", data);
+				res.send("Email sent");
+			})
+			.catch((error) => {
+				console.log("ses email on register", error);
+				res.send("email failed");
+			});
+	});
 };
