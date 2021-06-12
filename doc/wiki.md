@@ -5,6 +5,7 @@
 - [React / Next Js Client](#sec02)
 - [Node Js API](#sec03)
 - [Starting with AWS](#sec04)
+- [Login / Register / AWS SES](#sec05)
 
 <a id="#sec02"></a>
 
@@ -146,5 +147,15 @@
 - SES (Amazon Simple Email Service)
   - ori...
   - sato...
+
+#### [Return to Contents](#contents)
+
+<a id="#sec05"></a>
+
+## Login / Register / AWS SES
+
+### aaa
+
+- aaa
 
 #### [Return to Contents](#contents)
