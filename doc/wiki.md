@@ -107,6 +107,10 @@
     - controllers 内の動作を middleware として関数にまとめる
   - controllers
     - 具体的な動作
+    - auth
+      - AWS / SES を利用して認証、確認メールの送信などを行う
+  - validators
+    - パスワードのバリデーション周りを担う
 
 ### mongoose
 
