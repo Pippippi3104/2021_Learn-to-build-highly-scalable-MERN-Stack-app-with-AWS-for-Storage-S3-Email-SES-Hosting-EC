@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 
 import { showSuccessMessage, showErrorMessage } from "../helpers/alerts";
+import { API } from "../config";
 
 const Register = () => {
 	// state
@@ -34,7 +35,8 @@ const Register = () => {
 
 		// serverへデータを送信
 		try {
-			const response = await axios.post("http://localhost:8000/api/register", {
+			// API の実行 (server 側で構築済み)
+			const response = await axios.post(`${API}/register`, {
 				name,
 				email,
 				password,
@@ -68,6 +70,7 @@ const Register = () => {
 					type="text"
 					className="form-control"
 					placeholder="Type your name"
+					required
 				/>
 			</div>
 			<div className="form-group">
@@ -77,6 +80,7 @@ const Register = () => {
 					type="email"
 					className="form-control"
 					placeholder="Type your email"
+					required
 				/>
 			</div>
 			<div className="form-group">
@@ -86,6 +90,7 @@ const Register = () => {
 					type="password"
 					className="form-control"
 					placeholder="Type your password"
+					required
 				/>
 			</div>
 			<div className="form-group">
