@@ -4,6 +4,7 @@
 
 - [React / Next Js Client](#sec02)
 - [Node Js API](#sec03)
+- [Starting with AWS](#sec04)
 
 <a id="#sec02"></a>
 
@@ -125,5 +126,21 @@
 - test account
   - udemy
   - 111111111!Qq
+
+#### [Return to Contents](#contents)
+
+<a id="#sec04"></a>
+
+## Starting with AWS
+
+### AWS
+
+- [AWS](https://us-east-2.console.aws.amazon.com/)
+- IAM (Identity and Access Management )
+  - create account
+    - Ryan
+- SES (Amazon Simple Email Service)
+  - ori...
+  - sato...
 
 #### [Return to Contents](#contents)
