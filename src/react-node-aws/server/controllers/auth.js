@@ -1,6 +1,8 @@
 const AWS = require("aws-sdk");
-const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const shortId = require("shortid");
+
+const User = require("../models/user");
 const { registerEmailParams } = require("../helpers/email");
 
 /// AWS setting
@@ -29,7 +31,7 @@ exports.register = (req, res) => {
 		// generate token with user name email and password
 		const token = jwt.sign(
 			{ name, email, password },
-			process.env.JWT_ACCOUNT_ACTIVATE,
+			process.env.JWT_ACCOUNT_ACTIVATION,
 			{
 				expiresIn: "10m",
 			}
@@ -56,4 +58,48 @@ exports.register = (req, res) => {
 				});
 			});
 	});
+};
+
+exports.registerActivate = (req, res) => {
+	const { token } = req.body;
+
+	// 認証
+	jwt.verify(
+		token,
+		process.env.JWT_ACCOUNT_ACTIVATION,
+		function (err, decoded) {
+			if (err) {
+				return res.status(401).json({
+					error: "Expired link. Try again",
+				});
+			}
+
+			// リンク切れしていなければ、データ取得し処理を進める
+			const { name, email, password } = jwt.decode(token);
+			const username = shortId.generate();
+
+			// DB
+			User.findOne({ email }).exec((err, user) => {
+				if (user) {
+					return res.status(401).json({
+						error: "Email is taken",
+					});
+				}
+
+				// register new user
+				const newUser = new User({ username, name, email, password });
+				newUser.save((err, result) => {
+					if (err) {
+						console.error(err);
+						return res.status(401).json({
+							error: "Error saving user in database. Try later",
+						});
+					}
+					return res.json({
+						message: "Registration success. Please login.",
+					});
+				});
+			});
+		}
+	);
 };
