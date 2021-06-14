@@ -6,6 +6,7 @@ import Router from "next/router";
 
 import { showSuccessMessage, showErrorMessage } from "../helpers/alerts";
 import { API } from "../config";
+import { authenticate } from "../helpers/auth";
 
 const Login = () => {
 	// state
@@ -41,7 +42,10 @@ const Login = () => {
 				email,
 				password,
 			});
-			console.log(response);
+			// console.log(response);
+
+			// index page へ遷移
+			authenticate(response, () => Router.push("/"));
 		} catch (error) {
 			console.log(error);
 			setState({
