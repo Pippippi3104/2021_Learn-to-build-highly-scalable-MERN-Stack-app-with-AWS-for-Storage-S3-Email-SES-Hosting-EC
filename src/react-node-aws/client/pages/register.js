@@ -8,9 +8,9 @@ import { API } from "../config";
 const Register = () => {
 	// state
 	const [state, setState] = useState({
-		name: "",
-		email: "",
-		password: "",
+		name: "test",
+		email: "origamistfrancais@gmail.com",
+		password: "testtest",
 		error: "",
 		success: "",
 		buttonText: "Register",
