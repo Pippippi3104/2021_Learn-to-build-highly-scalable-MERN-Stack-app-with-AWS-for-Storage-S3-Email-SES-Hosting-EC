@@ -1,9 +1,11 @@
 import Layout from "../components/Layout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import Router from "next/router";
 
 import { showSuccessMessage, showErrorMessage } from "../helpers/alerts";
 import { API } from "../config";
+import { isAuth } from "../helpers/auth";
 
 const Register = () => {
 	// state
@@ -15,6 +17,13 @@ const Register = () => {
 		success: "",
 		buttonText: "Register",
 	});
+
+	// ログイン済みか確認
+	useEffect(() => {
+		isAuth() && Router.push("/");
+	}, []);
+
+	// state
 	const { name, email, password, error, success, buttonText } = state;
 
 	// functions

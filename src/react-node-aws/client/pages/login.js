@@ -6,7 +6,7 @@ import Router from "next/router";
 
 import { showSuccessMessage, showErrorMessage } from "../helpers/alerts";
 import { API } from "../config";
-import { authenticate } from "../helpers/auth";
+import { authenticate, isAuth } from "../helpers/auth";
 
 const Login = () => {
 	// state
@@ -17,6 +17,13 @@ const Login = () => {
 		success: "",
 		buttonText: "Login",
 	});
+
+	// ログイン済みか確認
+	useEffect(() => {
+		isAuth() && Router.push("/");
+	}, []);
+
+	// state
 	const { email, password, error, success, buttonText } = state;
 
 	// functions
@@ -45,7 +52,11 @@ const Login = () => {
 			// console.log(response);
 
 			// index page へ遷移
-			authenticate(response, () => Router.push("/"));
+			authenticate(response, () =>
+				isAuth() && isAuth().role === "admin"
+					? Router.push("/")
+					: Router.push("/user")
+			);
 		} catch (error) {
 			console.log(error);
 			setState({
