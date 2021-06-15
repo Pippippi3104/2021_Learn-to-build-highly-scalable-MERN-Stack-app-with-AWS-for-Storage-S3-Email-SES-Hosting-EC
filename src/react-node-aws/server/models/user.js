@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const crypt = require("crypto");
+const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema(
 	{
@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema(
 			trim: true,
 			required: true,
 			unique: true,
-			max: 32,
 			lowercase: true,
 		},
 		hashed_password: {
@@ -50,7 +49,7 @@ userSchema
 		// create temp variable called _password
 		this._password = password;
 
-		// genarate salt
+		// generate salt
 		this.salt = this.makeSalt();
 
 		// encrypt password
@@ -65,11 +64,14 @@ userSchema.methods = {
 	authenticate: function (plainText) {
 		return this.encryptPassword(plainText) === this.hashed_password;
 	},
-	encryptPassword: function (passowrd) {
-		if (!passowrd) return "";
+	encryptPassword: function (password) {
+		if (!password) return "";
 		try {
 			// salt を加えてハッシュ化
-			return crypt.createHmac("sha1", this.salt).update(password).digest("hex");
+			return crypto
+				.createHmac("sha1", this.salt)
+				.update(password)
+				.digest("hex");
 		} catch (err) {
 			return "";
 		}

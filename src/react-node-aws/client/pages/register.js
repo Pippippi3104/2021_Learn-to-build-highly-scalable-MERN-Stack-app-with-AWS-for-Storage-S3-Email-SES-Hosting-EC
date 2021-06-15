@@ -1,17 +1,29 @@
 import Layout from "../components/Layout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import Router from "next/router";
+
+import { showSuccessMessage, showErrorMessage } from "../helpers/alerts";
+import { API } from "../config";
+import { isAuth } from "../helpers/auth";
 
 const Register = () => {
 	// state
 	const [state, setState] = useState({
-		name: "",
-		email: "",
-		password: "",
+		name: "test",
+		email: "origamistfrancais@gmail.com",
+		password: "testtest",
 		error: "",
 		success: "",
 		buttonText: "Register",
 	});
+
+	// ログイン済みか確認
+	useEffect(() => {
+		isAuth() && Router.push("/");
+	}, []);
+
+	// state
 	const { name, email, password, error, success, buttonText } = state;
 
 	// functions
@@ -24,18 +36,37 @@ const Register = () => {
 			buttonText: "Regiser",
 		});
 	};
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// console.table({ name, email, password });
+
+		// send の pending
+		setState({ ...state, buttonText: "Registering" });
+
 		// serverへデータを送信
-		axios
-			.post("http://localhost:8000/api/register", {
+		try {
+			// API の実行 (server 側で構築済み)
+			const response = await axios.post(`${API}/register`, {
 				name,
 				email,
 				password,
-			})
-			.then((response) => console.log(response))
-			.catch((error) => console.log(error));
+			});
+			console.log(response);
+			setState({
+				...state,
+				name: "",
+				email: "",
+				password: "",
+				buttonText: "Submitted",
+				success: response.data.message, // server の auth controller にてメッセージが追加されている
+			});
+		} catch (error) {
+			console.log(error);
+			setState({
+				...state,
+				buttonText: "Register",
+				error: error.response.data.error, // server の auth controller にてメッセージが追加されている
+			});
+		}
 	};
 
 	// components
@@ -48,6 +79,7 @@ const Register = () => {
 					type="text"
 					className="form-control"
 					placeholder="Type your name"
+					required
 				/>
 			</div>
 			<div className="form-group">
@@ -57,6 +89,7 @@ const Register = () => {
 					type="email"
 					className="form-control"
 					placeholder="Type your email"
+					required
 				/>
 			</div>
 			<div className="form-group">
@@ -66,6 +99,7 @@ const Register = () => {
 					type="password"
 					className="form-control"
 					placeholder="Type your password"
+					required
 				/>
 			</div>
 			<div className="form-group">
@@ -77,12 +111,17 @@ const Register = () => {
 	// main screen
 	return (
 		<Layout>
+			{/* main screen components */}
 			<div className="col-md-6 offset-md-3">
 				<h1>Register</h1>
 				<br />
+
+				{/* alert message */}
+				{success && showSuccessMessage(success)}
+				{error && showErrorMessage(error)}
+
+				{/* forms */}
 				{registerForm()}
-				<hr />
-				{JSON.stringify(state)}
 			</div>
 		</Layout>
 	);

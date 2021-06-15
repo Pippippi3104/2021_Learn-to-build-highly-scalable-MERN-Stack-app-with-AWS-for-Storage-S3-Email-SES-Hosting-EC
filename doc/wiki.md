@@ -5,6 +5,7 @@
 - [React / Next Js Client](#sec02)
 - [Node Js API](#sec03)
 - [Starting with AWS](#sec04)
+- [Login / Register / AWS SES](#sec05)
 
 <a id="#sec02"></a>
 
@@ -111,6 +112,8 @@
       - AWS / SES を利用して認証、確認メールの送信などを行う
   - validators
     - パスワードのバリデーション周りを担う
+  - helpers
+    - controller 等で使われる、具体的なコンテンツなどを機能ごとにまとめたもの
 
 ### mongoose
 
@@ -146,5 +149,15 @@
 - SES (Amazon Simple Email Service)
   - ori...
   - sato...
+
+#### [Return to Contents](#contents)
+
+<a id="#sec05"></a>
+
+## Login / Register / AWS SES
+
+### aaa
+
+- aaa
 
 #### [Return to Contents](#contents)
