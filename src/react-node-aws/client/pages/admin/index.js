@@ -1,3 +1,7 @@
-const Admin = () => <h1>Admin page</h1>;
+import Layout from "../../components/Layout";
+
+const Admin = () => {
+	return <Layout>hello admin</Layout>;
+};
 
 export default Admin;
