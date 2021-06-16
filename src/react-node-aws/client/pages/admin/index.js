@@ -1,7 +1,7 @@
+import withAdmin from "../withAdmin";
+
 import Layout from "../../components/Layout";
 
-const Admin = () => {
-	return <Layout>hello admin</Layout>;
-};
+const Admin = ({ user }) => <Layout>{JSON.stringify(user)}</Layout>;
 
-export default Admin;
+export default withAdmin(Admin);
