@@ -167,8 +167,11 @@
 
 ## User / Admin Access
 
-### aaa
+### Problems
 
-- aaa
+- [if (!options.algorithms) throw new Error('algorithms should be set'); Error: algorithms should be set](https://stackoverflow.com/questions/62665636/if-options-algorithms-throw-new-erroralgorithms-should-be-set-error-alg)
+  - ```
+    expressJwt({ secret:  process.env.JWT_SECRET, algorithms: ['RS256'] });
+    ```
 
 #### [Return to Contents](#contents)
