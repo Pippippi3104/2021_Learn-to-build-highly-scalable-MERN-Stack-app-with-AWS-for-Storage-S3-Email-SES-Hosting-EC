@@ -136,7 +136,10 @@ exports.login = (req, res) => {
 	});
 };
 
-exports.requireSignin = expressJwt({ secret: process.env.JWT_SECRET }); // req.user
+exports.requireSignin = expressJwt({
+	secret: process.env.JWT_SECRET,
+	algorithms: ["HS256"],
+});
 
 exports.authMiddleware = (req, res, next) => {
 	const authUserId = req.user._id;
