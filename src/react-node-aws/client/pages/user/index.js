@@ -1,7 +1,25 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 import Layout from "../../components/Layout";
+import { API } from "../../config";
+import { getCookie } from "../../helpers/auth";
+import withUser from "../withUser";
 
-const User = () => {
-	return <Layout>hello user</Layout>;
-};
+// useEffect を使った場合
+// const User = () => {
+// 	const [todos, setTodos] = useState([]);
+// 	useEffect(() => {
+// 		axios
+// 			.get("https://jsonplaceholder.typicode.com/todos")
+// 			.then((response) => setTodos(response.data));
+// 	}, []);
+// 	return <Layout>{JSON.stringify(todos)}</Layout>;
+// };
 
-export default User;
+// screen component
+const User = ({ user, token }) => (
+	<Layout>{JSON.stringify(user, token)}</Layout>
+);
+
+export default withUser(User);

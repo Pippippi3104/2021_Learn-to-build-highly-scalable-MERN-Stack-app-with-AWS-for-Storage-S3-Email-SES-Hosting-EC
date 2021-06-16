@@ -6,6 +6,7 @@
 - [Node Js API](#sec03)
 - [Starting with AWS](#sec04)
 - [Login / Register / AWS SES](#sec05)
+- [User / Admin Access](#sec06)
 
 <a id="#sec02"></a>
 
@@ -159,5 +160,25 @@
 ### aaa
 
 - aaa
+
+#### [Return to Contents](#contents)
+
+<a id="#sec06"></a>
+
+## User / Admin Access
+
+### JsonPlaceholder
+
+- [Link](https://jsonplaceholder.typicode.com/)
+  - ```
+    https://jsonplaceholder.typicode.com/todos
+    ```
+
+### Problems
+
+- [if (!options.algorithms) throw new Error('algorithms should be set'); Error: algorithms should be set](https://stackoverflow.com/questions/62665636/if-options-algorithms-throw-new-erroralgorithms-should-be-set-error-alg)
+  - ```
+    expressJwt({ secret:  process.env.JWT_SECRET, algorithms: ['RS256'] });
+    ```
 
 #### [Return to Contents](#contents)
