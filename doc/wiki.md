@@ -167,6 +167,13 @@
 
 ## User / Admin Access
 
+### JsonPlaceholder
+
+- [Link](https://jsonplaceholder.typicode.com/)
+  - ```
+    https://jsonplaceholder.typicode.com/todos
+    ```
+
 ### Problems
 
 - [if (!options.algorithms) throw new Error('algorithms should be set'); Error: algorithms should be set](https://stackoverflow.com/questions/62665636/if-options-algorithms-throw-new-erroralgorithms-should-be-set-error-alg)
