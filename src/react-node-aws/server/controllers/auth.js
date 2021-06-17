@@ -2,6 +2,7 @@ const AWS = require("aws-sdk");
 const jwt = require("jsonwebtoken");
 const shortId = require("shortid");
 const expressJwt = require("express-jwt");
+const _ = require("lodash");
 
 const User = require("../models/user");
 const {
@@ -197,10 +198,10 @@ exports.forgotPassword = (req, res) => {
 		const params = forgotPasswordEmailParams(email, token);
 
 		// populate the db > user > resetPasswordLink
-		return User.updateOne({ resetPasswordLink: token }, (err, success) => {
+		return user.updateOne({ resetPasswordLink: token }, (err, success) => {
 			if (err) {
 				return res.status(400).json({
-					error: "Password reset failed. Try later",
+					error: "Password reset failed. Try later.",
 				});
 			}
 
@@ -216,7 +217,7 @@ exports.forgotPassword = (req, res) => {
 				.catch((error) => {
 					console.log("ses reset pw failed", error);
 					return res.json({
-						message: `We could not verify your email. Try later`,
+						message: `We could not vefiry your email. Try later.`,
 					});
 				});
 		});
@@ -224,5 +225,44 @@ exports.forgotPassword = (req, res) => {
 };
 
 exports.resetPassword = (req, res) => {
-	//
+	const { resetPasswordLink, newPassword } = req.body;
+
+	if (resetPasswordLink) {
+		// check for expiry
+		jwt.verify(
+			resetPasswordLink,
+			process.env.JWT_RESET_PASSWORD,
+			(err, success) => {
+				if (err) {
+					return res.status(400).json({
+						error: "Expired Link. Try again",
+					});
+				}
+				// success
+				User.findOne({ resetPasswordLink }).exec((err, user) => {
+					if (err || !user) {
+						return res.status(400).json({
+							error: "Invalid token. Try again",
+						});
+					}
+					const updatedFields = {
+						password: newPassword,
+						resetPasswordLink: "",
+					};
+					user = _.extend(user, updatedFields);
+
+					user.save((err, result) => {
+						if (err) {
+							return res.status(400).json({
+								error: "Password reset failed. Try again",
+							});
+						}
+						res.json({
+							message: `Great! Now you can login with your new password`,
+						});
+					});
+				});
+			}
+		);
+	}
 };
