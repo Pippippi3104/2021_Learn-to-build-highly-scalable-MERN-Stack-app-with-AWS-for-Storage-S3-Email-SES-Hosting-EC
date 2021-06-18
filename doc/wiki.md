@@ -7,6 +7,7 @@
 - [Starting with AWS](#sec04)
 - [Login / Register / AWS SES](#sec05)
 - [User / Admin Access](#sec06)
+- [Password Forgot / Reset](#sec07)
 
 <a id="#sec02"></a>
 
@@ -180,5 +181,15 @@
   - ```
     expressJwt({ secret:  process.env.JWT_SECRET, algorithms: ['RS256'] });
     ```
+
+#### [Return to Contents](#contents)
+
+<a id="#sec07"></a>
+
+## Password Forgot / Reset
+
+### aaa
+
+- aaa
 
 #### [Return to Contents](#contents)
