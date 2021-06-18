@@ -11,7 +11,7 @@ import Layout from "../../../components/Layout";
 const ForgotPassword = () => {
 	// state
 	const [state, setState] = useState({
-		email: "",
+		email: "origamistfrancais@gmail.com",
 		buttonText: "Forgot Account",
 		success: "",
 		error: "",
