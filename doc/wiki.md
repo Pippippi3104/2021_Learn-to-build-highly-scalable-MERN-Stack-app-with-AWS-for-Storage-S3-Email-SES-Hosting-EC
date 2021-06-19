@@ -8,6 +8,7 @@
 - [Login / Register / AWS SES](#sec05)
 - [User / Admin Access](#sec06)
 - [Password Forgot / Reset](#sec07)
+- [Categories / Uploads / AWS S3](#sec08)
 
 <a id="#sec02"></a>
 
@@ -187,6 +188,16 @@
 <a id="#sec07"></a>
 
 ## Password Forgot / Reset
+
+### aaa
+
+- aaa
+
+#### [Return to Contents](#contents)
+
+<a id="#sec08"></a>
+
+## Categories / Uploads / AWS S3
 
 ### aaa
 
