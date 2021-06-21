@@ -201,6 +201,71 @@
 
 ### aaa
 
-- aaa
+- [Bucket policy examples](https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies.html)
+
+  - ```
+    {
+      "Version":"2012-10-17",
+      "Statement":[
+        {
+          "Sid":"AddCannedAcl",
+          "Effect":"Allow",
+        "Principal": {"AWS": ["arn:aws:iam::111122223333:root","arn:aws:iam::444455556666:root"]},
+          "Action":["s3:PutObject","s3:PutObjectAcl"],
+          "Resource":"arn:aws:s3:::DOC-EXAMPLE-BUCKET/*",
+          "Condition":{"StringEquals":{"s3:x-amz-acl":["public-read"]}}
+        }
+      ]
+    }
+    ```
+
+- [CORS configuration](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html)
+  - ```
+    <CORSConfiguration>
+    <CORSRule>
+      <AllowedOrigin>http://www.example.com</AllowedOrigin>
+      <AllowedMethod>PUT</AllowedMethod>
+      <AllowedMethod>POST</AllowedMethod>
+      <AllowedMethod>DELETE</AllowedMethod>
+      <AllowedHeader>*</AllowedHeader>
+      <MaxAgeSeconds>3000</MaxAgeSeconds>
+      <ExposeHeader>x-amz-server-side-encryption</ExposeHeader>
+      <ExposeHeader>x-amz-request-id</ExposeHeader>
+      <ExposeHeader>x-amz-id-2</ExposeHeader>
+    </CORSRule>
+    </CORSConfiguration>
+    ```
+- [Amazon S3: Amazon Cognito ユーザーにバケット内のオブジェクトへのアクセスを許可する](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_examples_s3_cognito-bucket.html)
+  - ```
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ListYourObjects",
+                "Effect": "Allow",
+                "Action": "s3:ListBucket",
+                "Resource": ["arn:aws:s3:::bucket-name"],
+                "Condition": {
+                    "StringLike": {
+                        "s3:prefix": ["cognito/application-name/${cognito-identity.amazonaws.com:sub}"]
+                    }
+                }
+            },
+            {
+                "Sid": "ReadWriteDeleteYourObjects",
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetObject",
+                    "s3:PutObject",
+                    "s3:DeleteObject"
+                ],
+                "Resource": [
+                    "arn:aws:s3:::bucket-name/cognito/application-name/${cognito-identity.amazonaws.com:sub}",
+                    "arn:aws:s3:::bucket-name/cognito/application-name/${cognito-identity.amazonaws.com:sub}/*"
+                ]
+            }
+        ]
+    }
+    ```
 
 #### [Return to Contents](#contents)
