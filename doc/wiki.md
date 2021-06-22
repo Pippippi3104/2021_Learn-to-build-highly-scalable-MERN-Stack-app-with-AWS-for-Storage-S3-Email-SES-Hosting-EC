@@ -199,7 +199,7 @@
 
 ## Categories / Uploads / AWS S3
 
-### aaa
+### Links and examples
 
 - [Bucket policy examples](https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies.html)
 
@@ -236,6 +236,7 @@
     </CORSConfiguration>
     ```
 - [Amazon S3: Amazon Cognito ユーザーにバケット内のオブジェクトへのアクセスを許可する](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/reference_policies_examples_s3_cognito-bucket.html)
+
   - ```
     {
         "Version": "2012-10-17",
@@ -267,5 +268,7 @@
         ]
     }
     ```
+
+- [Base64 Image Encoder](https://www.base64-image.de/)
 
 #### [Return to Contents](#contents)
