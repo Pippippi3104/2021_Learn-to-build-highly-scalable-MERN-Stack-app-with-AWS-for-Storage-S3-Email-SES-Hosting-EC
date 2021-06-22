@@ -13,6 +13,7 @@ const s3 = new AWS.S3({
 	region: process.env.AWS_REGION,
 });
 
+// functions
 exports.create = (req, res) => {
 	let form = new formidable.IncomingForm();
 	form.parse(req, (err, fields, files) => {
@@ -62,6 +63,29 @@ exports.create = (req, res) => {
 	});
 };
 
+exports.list = (req, res) => {
+	Category.find({}).exec((err, data) => {
+		if (err) {
+			return res.status(400).json({
+				error: "Categories could not load",
+			});
+		}
+		res.json(data);
+	});
+};
+
+exports.read = (req, res) => {
+	//
+};
+
+exports.update = (req, res) => {
+	//
+};
+
+exports.remove = (req, res) => {
+	//
+};
+
 // exports.create = (req, res) => {
 // 	const { name, content } = req.body;
 // 	const slug = slugify(name);
@@ -83,15 +107,3 @@ exports.create = (req, res) => {
 // 		res.json(data);
 // 	});
 // };
-exports.list = (req, res) => {
-	//
-};
-exports.read = (req, res) => {
-	//
-};
-exports.update = (req, res) => {
-	//
-};
-exports.remove = (req, res) => {
-	//
-};
