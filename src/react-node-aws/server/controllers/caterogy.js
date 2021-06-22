@@ -15,50 +15,44 @@ const s3 = new AWS.S3({
 
 // functions
 exports.create = (req, res) => {
-	let form = new formidable.IncomingForm();
-	form.parse(req, (err, fields, files) => {
+	// state
+	const { name, image, content } = req.body;
+
+	// image data
+	const base64Data = new Buffer.from(
+		image.replace(/^data:image\/w+;base64,/, ""),
+		"base64"
+	);
+	const type = image.split(";")[0].split("/")[1];
+
+	// new category
+	const slug = slugify(name);
+	let category = new Category({ name, content, slug });
+
+	// upload image to s3
+	const params = {
+		Bucket: "hackr-kaloraat-sato",
+		Key: `category/${uuidv4()}.${type}`,
+		Body: base64Data,
+		ACL: "public-read",
+		ContentEncoding: "base64",
+		ContentType: `image/${type}`,
+	};
+	s3.upload(params, (err, data) => {
 		if (err) {
-			return res.status(400).json({
-				error: "Image cloud not upload",
-			});
+			return res.status(400).json({ error: "Upload to s3 failed" });
 		}
+		console.log("AWS UPLOAD RES DATA", data);
+		category.image.url = data.Location;
+		category.image.key = data.Key;
 
-		// new category
-		const { name, content } = fields;
-		const { image } = files;
-		const slug = slugify(name);
-
-		let category = new Category({ name, content, slug });
-		if (image.size > 2000000) {
-			return res.status(400).json({
-				error: "Image should be less than 2mb",
-			});
-		}
-
-		// upload image to s3
-		const params = {
-			Bucket: "hackr-kaloraat-sato",
-			Key: `category/${uuidv4()}`,
-			Body: fs.readFileSync(image.path),
-			ACL: "public-read",
-			ContentType: `image/jpg`,
-		};
-		s3.upload(params, (err, data) => {
+		// save db
+		category.save((err, success) => {
 			if (err) {
-				return res.status(400).json({ error: "Upload to s3 failed" });
+				console.error(err);
+				return res.status.json({ error: "Error saving category to db" });
 			}
-			console.log("AWS UPLOAD RES DATA", data);
-			category.image.url = data.Location;
-			category.image.key = data.Key;
-
-			// save db
-			category.save((err, success) => {
-				if (err) {
-					console.error(err);
-					return res.status.json({ error: "Error saving category to db" });
-				}
-				return res.json(success);
-			});
+			return res.json(success);
 		});
 	});
 };
@@ -105,5 +99,54 @@ exports.remove = (req, res) => {
 // 			});
 // 		}
 // 		res.json(data);
+// 	});
+// };
+
+// exports.create = (req, res) => {
+// 	let form = new formidable.IncomingForm();
+// 	form.parse(req, (err, fields, files) => {
+// 		if (err) {
+// 			return res.status(400).json({
+// 				error: "Image cloud not upload",
+// 			});
+// 		}
+
+// 		// new category
+// 		const { name, content } = fields;
+// 		const { image } = files;
+// 		const slug = slugify(name);
+
+// 		let category = new Category({ name, content, slug });
+// 		if (image.size > 2000000) {
+// 			return res.status(400).json({
+// 				error: "Image should be less than 2mb",
+// 			});
+// 		}
+
+// 		// upload image to s3
+// 		const params = {
+// 			Bucket: "hackr-kaloraat-sato",
+// 			Key: `category/${uuidv4()}`,
+// 			Body: fs.readFileSync(image.path),
+// 			ACL: "public-read",
+// 			ContentType: `image/jpg`,
+// 		};
+// 		s3.upload(params, (err, data) => {
+// 			if (err) {
+// 				return res.status(400).json({ error: "Upload to s3 failed" });
+// 			}
+// 			console.log("AWS UPLOAD RES DATA", data);
+// 			category.image.url = data.Location;
+// 			category.image.key = data.Key;
+
+// 			// save db
+// 			category.save((err, success) => {
+// 				if (err) {
+// 					console.error(err);
+// 					return res.status.json({ error: "Error saving category to db" });
+// 				}
+// 				return res.json(success);
+// 			});
+// 		});
 // 	});
 // };
