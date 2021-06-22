@@ -1,6 +1,9 @@
+import dynamic from "next/dynamic";
 import axios from "axios";
 import { useState } from "react";
 import Resizer from "react-image-file-resizer";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.bubble.css";
 
 import Layout from "../../../components/Layout";
 import withAdmin from "../../withAdmin";
@@ -11,63 +14,53 @@ const Create = ({ user, token }) => {
 	// state
 	const [state, setState] = useState({
 		name: "",
-		content: "",
 		error: "",
 		success: "",
 		buttonText: "Create",
-		imageUploadText: "Upload image",
 		image: "",
 	});
+	const [content, setContent] = useState("");
 	const [imageUploadButtonName, setImageUploadButtonName] =
 		useState("Upload image");
-	const { name, content, success, error, image, buttonText, imageUploadText } =
-		state;
+	const { name, success, error, image, buttonText, imageUploadText } = state;
 
 	// function
 	const handleChange = (name) => (e) => {
-		setState({
-			...state,
-			[name]: e.target.value,
-			error: "",
-			success: "",
-		});
+		setState({ ...state, [name]: e.target.value, error: "", success: "" });
 	};
 
-	const handleImage = (e) => {
+	const handleContent = (e) => {
+		console.log(e);
+		setContent(e);
+		setState({ ...state, success: "", error: "" });
+	};
+
+	const handleImage = (event) => {
 		let fileInput = false;
-		if (e.target.files[0]) {
+		if (event.target.files[0]) {
 			fileInput = true;
 		}
-
-		setImageUploadButtonName(e.target.files[0].name);
-
+		setImageUploadButtonName(event.target.files[0].name);
 		if (fileInput) {
-			try {
-				Resizer.imageFileResizer(
-					e.target.files[0],
-					300,
-					300,
-					"JPEG",
-					100,
-					0,
-					(uri) => {
-						setState({ ...state, image: uri, success: "", error: "" });
-					},
-					"base64",
-					200,
-					200
-				);
-			} catch (err) {
-				console.log(err);
-			}
+			Resizer.imageFileResizer(
+				event.target.files[0],
+				300,
+				300,
+				"JPEG",
+				100,
+				0,
+				(uri) => {
+					setState({ ...state, image: uri, success: "", error: "" });
+				},
+				"base64"
+			);
 		}
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setState({ ...state, buttonText: "Creating" });
-
-		//
+		console.table({ name, content, image });
 		try {
 			const response = await axios.post(
 				`${API}/category`,
@@ -90,10 +83,9 @@ const Create = ({ user, token }) => {
 				success: `${response.data.name} is created`,
 			});
 		} catch (error) {
-			console.log("CATEGORY CREATE RESPONSE", error);
+			console.log("CATEGORY CREATE ERROR", error);
 			setState({
 				...state,
-				// name: "",
 				buttonText: "Create",
 				error: error.response.data.error,
 			});
@@ -115,12 +107,13 @@ const Create = ({ user, token }) => {
 			</div>
 			<div className="form-group">
 				<label className="text-muted">Content</label>
-				<textarea
-					onChange={handleChange("content")}
+				<ReactQuill
 					value={content}
-					type="text"
-					className="form-control"
-					required
+					onChange={handleContent}
+					placeholder="Write something..."
+					theme="bubble"
+					className="pb-5 mb-3"
+					style={{ border: "1px solid #666" }}
 				/>
 			</div>
 			<div className="form-group">

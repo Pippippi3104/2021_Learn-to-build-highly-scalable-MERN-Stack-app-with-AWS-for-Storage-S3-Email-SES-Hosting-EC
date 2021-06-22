@@ -37,12 +37,11 @@ const Home = ({ categories }) => {
 		<Layout>
 			<div className="row">
 				<div className="col-md-12">
-					<h1 className="font-weight-hold">Browse Tutorial/Courses</h1>
+					<h1 className="font-weight-bold">Browse Tutorials/Courses</h1>
 					<br />
 				</div>
 			</div>
 
-			{/* list */}
 			<div className="row">{listCategories()}</div>
 		</Layout>
 	);
@@ -51,7 +50,6 @@ const Home = ({ categories }) => {
 // fetch
 Home.getInitialProps = async () => {
 	const response = await axios.get(`${API}/categories`);
-
 	return {
 		categories: response.data,
 	};
