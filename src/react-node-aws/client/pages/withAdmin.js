@@ -33,7 +33,7 @@ const withAdmin = (Page) => {
 			context.res.writeHead(302, {
 				Location: "/",
 			});
-			content.res.end();
+			context.res.end();
 		} else {
 			return {
 				...(Page.getInitialProps ? await Page.getInitialProps(context) : {}),

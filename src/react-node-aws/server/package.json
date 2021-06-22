@@ -27,5 +27,6 @@
     "shortid": "^2.2.16",
     "slugify": "^1.5.3",
     "uuid": "^8.3.2"
-  }
+  },
+  "dependencies": {}
 }
