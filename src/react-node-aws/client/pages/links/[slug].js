@@ -3,6 +3,7 @@ import axios from "axios";
 import renderHTML from "react-render-html";
 import { useState } from "react";
 import moment from "moment";
+import InfiniteScroll from "react-infinite-scroller";
 
 import Layout from "../../components/Layout";
 import { API } from "../../config";
@@ -17,12 +18,37 @@ const Links = ({
 }) => {
 	//state
 	const [allLinks, setAllLinks] = useState(links);
+	const [limit, setLimit] = useState(linksLimit);
+	const [skip, setSkip] = useState(0);
+	const [size, setSize] = useState(totalLinks);
+
+	// functioins
+	const loadMore = async () => {
+		let toSkip = skip + limit;
+		const resopnse = await axios.post(`${API}/category/${query.slug}`, {
+			skip: toSkip,
+			limit,
+		});
+		setAllLinks([...allLinks, ...resopnse.data.links]);
+		setSize(resopnse.data.links.length);
+		setSkip(toSkip);
+	};
+
+	const handleClick = async (linkId) => {
+		const response = await axios.put(`${API}/click-count`, { linkId });
+		loadUpdateLinks();
+	};
+
+	const loadUpdateLinks = async () => {
+		const response = await axios.put(`${API}/category/${query.slug}`);
+		setAllLinks(response.data.links);
+	};
 
 	// components
 	const listOfLinks = () =>
 		allLinks.map((l, i) => (
 			<div className="row alert alert-primary p-2">
-				<div className="col-md-8">
+				<div className="col-md-8" onClick={(e) => handleClick(l._id)}>
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
 						<h6 className="pt-2 text-danger" style={{ fontSize: "12px" }}>
@@ -33,6 +59,9 @@ const Links = ({
 				<div className="col-md-4 pt-2">
 					<span className="pull-right">
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
+					</span>
+					<span className="badge text-secondary pull-right">
+						{l.clicks} clicks
 					</span>
 				</div>
 				<div className="col-md-12">
@@ -45,6 +74,17 @@ const Links = ({
 				</div>
 			</div>
 		));
+
+	// const loadMoreButton = () => {
+	// 	return (
+	// 		size > 0 &&
+	// 		size >= limit && (
+	// 			<button onClick={loadMore} className="btn btn-outline-primary btn-lg">
+	// 				Load more
+	// 			</button>
+	// 		)
+	// 	);
+	// };
 
 	// screen
 	return (
@@ -73,7 +113,22 @@ const Links = ({
 						<p>show popular links</p>
 					</div>
 				</div>
-				<p>load more button</p>
+				{/* <div className="text-center pt-4 pb-5">{loadMoreButton()}</div> */}
+				<div className="row">
+					<div className="col-md-12 text-center">
+						<InfiniteScroll
+							pageStart={0}
+							loadMore={loadMore}
+							hasMore={size > 0 && size >= limit}
+							loader={
+								<image
+									src="../../public/static/iamges/loading.gif"
+									alt="loading"
+								/>
+							}
+						></InfiniteScroll>
+					</div>
+				</div>
 			</div>
 		</Layout>
 	);
