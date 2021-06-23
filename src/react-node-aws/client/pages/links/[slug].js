@@ -17,6 +17,21 @@ const Links = ({
 }) => {
 	//state
 	const [allLinks, setAllLinks] = useState(links);
+	const [limit, setLimit] = useState(linksLimit);
+	const [skip, setSkip] = useState(0);
+	const [size, setSize] = useState(totalLinks);
+
+	// functioins
+	const loadMore = async () => {
+		let toSkip = skip + limit;
+		const resopnse = await axios.post(`${API}/category/${query.slug}`, {
+			skip: toSkip,
+			limit,
+		});
+		setAllLinks([...allLinks, ...resopnse.data.links]);
+		setSize(resopnse.data.links.length);
+		setSkip(toSkip);
+	};
 
 	// components
 	const listOfLinks = () =>
@@ -46,6 +61,17 @@ const Links = ({
 			</div>
 		));
 
+	const loadMoreButton = () => {
+		return (
+			size > 0 &&
+			size >= limit && (
+				<button onClick={loadMore} className="btn btn-outline-primary btn-lg">
+					Load more
+				</button>
+			)
+		);
+	};
+
 	// screen
 	return (
 		<Layout>
@@ -73,7 +99,7 @@ const Links = ({
 						<p>show popular links</p>
 					</div>
 				</div>
-				<p>load more button</p>
+				<div className="text-center pt-4 pb-5">{loadMoreButton()}</div>
 			</div>
 		</Layout>
 	);
