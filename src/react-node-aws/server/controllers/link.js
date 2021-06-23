@@ -1,4 +1,4 @@
-const Link = require("../models/links");
+const Link = require("../models/link");
 const slugify = require("slugify");
 
 // CRUD
@@ -32,12 +32,15 @@ exports.list = (req, res) => {
 		res.json(data);
 	});
 };
+
 exports.read = (req, res) => {
 	//
 };
+
 exports.update = (req, res) => {
 	//
 };
+
 exports.remove = (req, res) => {
 	//
 };
