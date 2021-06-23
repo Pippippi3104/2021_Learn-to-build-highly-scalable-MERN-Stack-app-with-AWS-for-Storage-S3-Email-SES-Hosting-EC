@@ -51,10 +51,11 @@ const Create = () => {
 		setState({ ...state, url: e.target.value, error: "", success: "" });
 	};
 
-	const handleToggle = (c) => {
+	const handleToggle = (c) => () => {
 		// return the first index or -1
 		const clickedCategory = categories.indexOf(c);
 		const all = [...categories];
+
 		if (clickedCategory === -1) {
 			all.push(c);
 		} else {
