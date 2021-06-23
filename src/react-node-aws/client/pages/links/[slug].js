@@ -33,11 +33,21 @@ const Links = ({
 		setSkip(toSkip);
 	};
 
+	const handleClick = async (linkId) => {
+		const response = await axios.put(`${API}/click-count`, { linkId });
+		loadUpdateLinks();
+	};
+
+	const loadUpdateLinks = async () => {
+		const response = await axios.put(`${API}/category/${query.slug}`);
+		setAllLinks(response.data.links);
+	};
+
 	// components
 	const listOfLinks = () =>
 		allLinks.map((l, i) => (
 			<div className="row alert alert-primary p-2">
-				<div className="col-md-8">
+				<div className="col-md-8" onClick={(e) => handleClick(l._id)}>
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
 						<h6 className="pt-2 text-danger" style={{ fontSize: "12px" }}>
@@ -48,6 +58,9 @@ const Links = ({
 				<div className="col-md-4 pt-2">
 					<span className="pull-right">
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
+					</span>
+					<span className="badge text-secondary pull-right">
+						{l.clicks} clicks
 					</span>
 				</div>
 				<div className="col-md-12">
