@@ -38,10 +38,7 @@ const Layout = ({ children }) => {
 
 			<li className="nav-item">
 				<Link href="/user/link/create">
-					<a
-						className="nav-link text-dark btn btn-success"
-						style={{ borderRadius: "0px" }}
-					>
+					<a className="btn btn-success" style={{ borderRadius: "5px" }}>
 						Submit a link
 					</a>
 				</Link>
