@@ -3,6 +3,7 @@ import axios from "axios";
 import renderHTML from "react-render-html";
 import { useState } from "react";
 import moment from "moment";
+import InfiniteScroll from "react-infinite-scroller";
 
 import Layout from "../../components/Layout";
 import { API } from "../../config";
@@ -74,16 +75,16 @@ const Links = ({
 			</div>
 		));
 
-	const loadMoreButton = () => {
-		return (
-			size > 0 &&
-			size >= limit && (
-				<button onClick={loadMore} className="btn btn-outline-primary btn-lg">
-					Load more
-				</button>
-			)
-		);
-	};
+	// const loadMoreButton = () => {
+	// 	return (
+	// 		size > 0 &&
+	// 		size >= limit && (
+	// 			<button onClick={loadMore} className="btn btn-outline-primary btn-lg">
+	// 				Load more
+	// 			</button>
+	// 		)
+	// 	);
+	// };
 
 	// screen
 	return (
@@ -112,7 +113,22 @@ const Links = ({
 						<p>show popular links</p>
 					</div>
 				</div>
-				<div className="text-center pt-4 pb-5">{loadMoreButton()}</div>
+				{/* <div className="text-center pt-4 pb-5">{loadMoreButton()}</div> */}
+				<div className="row">
+					<div className="col-md-12 text-center">
+						<InfiniteScroll
+							pageStart={0}
+							loadMore={loadMore}
+							hasMore={size > 0 && size >= limit}
+							loader={
+								<image
+									src="../../public/static/iamges/loading.gif"
+									alt="loading"
+								/>
+							}
+						></InfiniteScroll>
+					</div>
+				</div>
 			</div>
 		</Layout>
 	);
