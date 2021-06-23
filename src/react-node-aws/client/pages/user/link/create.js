@@ -30,11 +30,11 @@ const Create = () => {
 
 	//fetch
 	useEffect(() => {
-		fetchLoadedCategories();
+		loadCategories();
 	}, [success]);
 
 	// functions
-	const fetchLoadedCategories = async () => {
+	const loadCategories = async () => {
 		const response = await axios.get(`${API}/categories`);
 		setState({ ...state, loadedCategories: response.data });
 	};
@@ -49,6 +49,36 @@ const Create = () => {
 
 	const handleURLChange = (e) => {
 		setState({ ...state, url: e.target.value, error: "", success: "" });
+	};
+
+	const handleToggle = (c) => {
+		// return the first index or -1
+		const clickedCategory = categories.indexOf(c);
+		const all = [...categories];
+		if (clickedCategory === -1) {
+			all.push(c);
+		} else {
+			all.splice(clickedCategory, 1);
+		}
+		console.log("all >> categories", all);
+		setState({ ...state, categories: all, success: "", error: "" });
+	};
+
+	// show categories > check
+	const showCategories = () => {
+		return (
+			loadedCategories &&
+			loadedCategories.map((c, i) => (
+				<li className="list-unstyled" key={c._id}>
+					<input
+						type="checkbox"
+						onChange={handleToggle(c._id)}
+						className="mr-2"
+					/>
+					<label className="form-check-label">{c.name}</label>
+				</li>
+			))
+		);
 	};
 
 	// link create form
@@ -85,14 +115,25 @@ const Create = () => {
 		<Layout>
 			<div className="row">
 				<div className="col-md-12">
-					<h1>Submit Link / URL</h1>
+					<h1>Submit Link/URL</h1>
 					<br />
 				</div>
 			</div>
 			<div className="row">
-				<div className="col-md-4">xxx</div>
+				{/* left side */}
+				<div className="col-md-4">
+					<div className="form-group">
+						<label className="text-muted ml-4">Category</label>
+						<ul style={{ maxHeight: "100px", overflowY: "scroll" }}>
+							{showCategories()}
+						</ul>
+					</div>
+				</div>
+
+				{/* right side */}
 				<div className="col-md-8">{submitLinkForm()}</div>
 			</div>
+			{JSON.stringify(categories)}
 		</Layout>
 	);
 };
