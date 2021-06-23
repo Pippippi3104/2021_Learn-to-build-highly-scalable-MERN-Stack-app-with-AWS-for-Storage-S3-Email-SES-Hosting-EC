@@ -4,8 +4,9 @@ import axios from "axios";
 import Layout from "../../../components/Layout";
 import { API } from "../../../config";
 import { showSuccessMessage, showErrorMessage } from "../../../helpers/alerts";
+import { getCookie, isAuth } from "../../../helpers/auth";
 
-const Create = () => {
+const Create = ({ token }) => {
 	// state
 	const [state, setState] = useState({
 		title: "",
@@ -41,7 +42,33 @@ const Create = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.table({ title, url, categories, type, medium });
+		try {
+			const response = await axios.post(
+				`${API}/link`,
+				{
+					title,
+					url,
+					categories,
+					type,
+					medium,
+				},
+				{ headers: { Authorization: `Bearer ${token}` } }
+			);
+			setState({
+				...state,
+				title: "",
+				url: "",
+				success: "Link is created",
+				error: "",
+				loadedCategories: [],
+				categories: [],
+				type: "",
+				medium: "",
+			});
+		} catch (error) {
+			console.error("LINK SUBMIT ERROR", error);
+			setState({ ...state, error: error.response.data.error });
+		}
 	};
 
 	const handleTitleChange = (e) => {
@@ -113,8 +140,8 @@ const Create = () => {
 				/>
 			</div>
 			<div>
-				<button class="btn btn-outline-warning" type="submit">
-					Submit
+				<button disabled={!token} class="btn btn-outline-warning" type="submit">
+					{isAuth() || token ? "Post" : "Login tp post"}
 				</button>
 			</div>
 		</form>
@@ -214,12 +241,19 @@ const Create = () => {
 				</div>
 
 				{/* right side */}
-				<div className="col-md-8">{submitLinkForm()}</div>
+				<div className="col-md-8">
+					{success && showSuccessMessage(success)}
+					{error && showErrorMessage(error)}
+					{submitLinkForm()}
+				</div>
 			</div>
-			{JSON.stringify(type)}
-			{JSON.stringify(medium)}
 		</Layout>
 	);
+};
+
+Create.getInitialProps = ({ req }) => {
+	const token = getCookie("token", req);
+	return { token };
 };
 
 export default Create;
