@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import Layout from "../../../components/Layout";
@@ -39,8 +39,9 @@ const Create = () => {
 		setState({ ...state, loadedCategories: response.data });
 	};
 
-	const handleSubmit = async () => {
-		console.log("POST to server");
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		console.table({ title, url, categories, type, medium });
 	};
 
 	const handleTitleChange = (e) => {
@@ -49,6 +50,14 @@ const Create = () => {
 
 	const handleURLChange = (e) => {
 		setState({ ...state, url: e.target.value, error: "", success: "" });
+	};
+
+	const handleTypeClick = (e) => {
+		setState({ ...state, type: e.target.value, success: "", error: "" });
+	};
+
+	const handleMediumClick = (e) => {
+		setState({ ...state, medium: e.target.value, success: "", error: "" });
 	};
 
 	const handleToggle = (c) => () => {
@@ -111,6 +120,71 @@ const Create = () => {
 		</form>
 	);
 
+	// radio components
+	const showMedium = () => (
+		<React.Fragment>
+			<div className="form-check ml-3">
+				<label className="form-check-label">
+					<input
+						type="radio"
+						onClick={handleMediumClick}
+						checked={medium === "video"}
+						value="video"
+						className="from-check-input"
+						name="medium"
+					/>{" "}
+					Video
+				</label>
+			</div>
+
+			<div className="form-check ml-3">
+				<label className="form-check-label">
+					<input
+						type="radio"
+						onClick={handleMediumClick}
+						checked={medium === "book"}
+						value="book"
+						className="from-check-input"
+						name="medium"
+					/>{" "}
+					Book
+				</label>
+			</div>
+		</React.Fragment>
+	);
+
+	const showTypes = () => (
+		<React.Fragment>
+			<div className="form-check ml-3">
+				<label className="form-check-label">
+					<input
+						type="radio"
+						onClick={handleTypeClick}
+						checked={type === "free"}
+						value="free"
+						className="from-check-input"
+						name="type"
+					/>{" "}
+					Free
+				</label>
+			</div>
+
+			<div className="form-check ml-3">
+				<label className="form-check-label">
+					<input
+						type="radio"
+						onClick={handleTypeClick}
+						checked={type === "paid"}
+						value="paid"
+						className="from-check-input"
+						name="type"
+					/>{" "}
+					Paid
+				</label>
+			</div>
+		</React.Fragment>
+	);
+
 	// screen
 	return (
 		<Layout>
@@ -129,12 +203,21 @@ const Create = () => {
 							{showCategories()}
 						</ul>
 					</div>
+					<div className="form-group">
+						<label className="text-muted ml-4">Type</label>
+						{showTypes()}
+					</div>
+					<div className="form-group">
+						<label className="text-muted ml-4">Medium</label>
+						{showMedium()}
+					</div>
 				</div>
 
 				{/* right side */}
 				<div className="col-md-8">{submitLinkForm()}</div>
 			</div>
-			{JSON.stringify(categories)}
+			{JSON.stringify(type)}
+			{JSON.stringify(medium)}
 		</Layout>
 	);
 };
