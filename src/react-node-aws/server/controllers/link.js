@@ -10,12 +10,11 @@ exports.create = (req, res) => {
 	// link
 	let link = new Link({ title, url, categories, type, medium, slug });
 	link.postedBy = req.user._id; // posted by user
-	let arrayofCategories = categories && categories.split(",");
-	link.categories = arrayofCategories;
 
 	// save link
 	link.save((err, data) => {
 		if (err) {
+			console.error(error);
 			return res.status(400).json({
 				error: "Link already exist",
 			});
