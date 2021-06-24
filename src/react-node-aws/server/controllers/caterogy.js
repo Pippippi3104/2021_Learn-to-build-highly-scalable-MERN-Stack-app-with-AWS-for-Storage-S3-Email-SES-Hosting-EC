@@ -162,7 +162,32 @@ exports.update = (req, res) => {
 };
 
 exports.remove = (req, res) => {
-	//
+	const { slug } = req.params;
+
+	Category.findOneAndRemove({ slug }).exec((err, data) => {
+		if (err) {
+			return res.status(400).json({
+				error: "Could not delete category",
+			});
+		}
+
+		// remove the existing image from s3 before uploading new/updated one
+		const deleteParams = {
+			Bucket: "hackr-kaloraat-sato",
+			Key: `category/${data.image.key}`,
+		};
+		s3.deleteObject(deleteParams, (err, data) => {
+			if (err) {
+				console.log("S3 DELETE ERROR DURING", err);
+			} else {
+				console.log("S3 DELETED DURING", data);
+			}
+		});
+
+		res.json({
+			message: "Category deleted successfully",
+		});
+	});
 };
 
 // exports.create = (req, res) => {
