@@ -13,6 +13,7 @@
 - [Load more / Click count / Infinite scroll](#sec10)
 - [Category Update / Delete](#sec11)
 - [User can Update / Delete](#sec12)
+- [Admin Update / Delete Access](#sec13)
 
 <a id="#sec02"></a>
 
@@ -310,6 +311,16 @@
 <a id="#sec12"></a>
 
 ## User can Update / Delete
+
+### aaa
+
+- aaa
+
+#### [Return to Contents](#contents)
+
+<a id="#sec13"></a>
+
+## Admin Update / Delete Access
 
 ### aaa
 
