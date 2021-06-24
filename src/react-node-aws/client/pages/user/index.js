@@ -18,8 +18,8 @@ import withUser from "../withUser";
 // };
 
 // screen component
-const User = ({ user, token }) => (
-	<Layout>{JSON.stringify(user, token)}</Layout>
+const User = ({ user, token, userLinks }) => (
+	<Layout>{JSON.stringify(userLinks)}</Layout>
 );
 
 export default withUser(User);
