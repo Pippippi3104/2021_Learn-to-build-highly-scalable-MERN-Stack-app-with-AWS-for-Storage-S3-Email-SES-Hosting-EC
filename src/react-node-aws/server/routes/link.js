@@ -34,7 +34,7 @@ router.get("/links", list);
 router.put("/click-count", clickCount);
 router.get("/link/:slug", read);
 router.put(
-	"/link/:slug",
+	"/link/:id",
 	linkUpdateValidator,
 	runValidation,
 	requireSignin,
