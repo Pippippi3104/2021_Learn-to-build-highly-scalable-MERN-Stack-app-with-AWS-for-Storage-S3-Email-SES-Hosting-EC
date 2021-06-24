@@ -47,7 +47,7 @@ const Links = ({
 	// components
 	const listOfLinks = () =>
 		allLinks.map((l, i) => (
-			<div className="row alert alert-primary p-2">
+			<div key={i} className="row alert alert-primary p-2">
 				<div className="col-md-8" onClick={(e) => handleClick(l._id)}>
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
@@ -69,7 +69,9 @@ const Links = ({
 						{l.type} / {l.medium}
 					</span>
 					{l.categories.map((c, i) => (
-						<span className="badge text-success">{c.name}</span>
+						<span key={i} className="badge text-success">
+							{c.name}
+						</span>
 					))}
 				</div>
 			</div>
@@ -106,29 +108,27 @@ const Links = ({
 					/>
 				</div>
 				<br />
-				<div className="row">
-					<div className="col-md-8">{listOfLinks()}</div>
-					<div className="col-md-4">
-						<h2 className="lead">Most popular in {category.name}</h2>
-						<p>show popular links</p>
-					</div>
-				</div>
 				{/* <div className="text-center pt-4 pb-5">{loadMoreButton()}</div> */}
-				<div className="row">
-					<div className="col-md-12 text-center">
-						<InfiniteScroll
-							pageStart={0}
-							loadMore={loadMore}
-							hasMore={size > 0 && size >= limit}
-							loader={
-								<image
-									src="../../public/static/iamges/loading.gif"
-									alt="loading"
-								/>
-							}
-						></InfiniteScroll>
+				<InfiniteScroll
+					pageStart={0}
+					loadMore={loadMore}
+					hasMore={size > 0 && size >= limit}
+					loader={
+						<image
+							key={0}
+							src="../../public/static/iamges/loading.gif"
+							alt="loading"
+						/>
+					}
+				>
+					<div className="row">
+						{<div className="col-md-8">{listOfLinks()}</div>}
+						<div className="col-md-4">
+							<h2 className="lead">Most popular in {category.name}</h2>
+							<p>show popular links</p>
+						</div>
 					</div>
-				</div>
+				</InfiniteScroll>
 			</div>
 		</Layout>
 	);
