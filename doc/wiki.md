@@ -11,6 +11,7 @@
 - [Categories / Uploads / AWS S3](#sec08)
 - [Links](#sec09)
 - [Load more / Click count / Infinite scroll](#sec10)
+- [Category Update / Delete](#sec11)
 
 <a id="#sec02"></a>
 
@@ -288,6 +289,16 @@
 <a id="#sec10"></a>
 
 ## Load more / Click count / Infinite scroll
+
+### aaa
+
+- aaa
+
+#### [Return to Contents](#contents)
+
+<a id="#sec11"></a>
+
+## Category Update / Delete
 
 ### aaa
 

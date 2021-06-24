@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import Resizer from "react-image-file-resizer";
 
 import Layout from "../../../components/Layout";
 import withAdmin from "../../withAdmin";
