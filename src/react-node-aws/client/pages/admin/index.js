@@ -20,6 +20,11 @@ const Admin = ({ user }) => (
 							<a className="nav-link">Categories</a>
 						</Link>
 					</li>
+					<li className="nav-item">
+						<Link href="/admin/link/read">
+							<a className="nav-link">All links</a>
+						</Link>
+					</li>
 				</ul>
 			</div>
 			<div className="col-md-8"></div>
