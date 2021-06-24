@@ -5,18 +5,19 @@ import Layout from "../../../components/Layout";
 import { API } from "../../../config";
 import { showSuccessMessage, showErrorMessage } from "../../../helpers/alerts";
 import { getCookie, isAuth } from "../../../helpers/auth";
+import withUser from "../../withUser";
 
-const Create = ({ token }) => {
+const Update = ({ oldLink, token }) => {
 	// state
 	const [state, setState] = useState({
-		title: "",
-		url: "",
-		categories: [],
+		title: oldLink.title,
+		url: oldLink.url,
+		categories: oldLink.categories,
 		loadedCategories: [],
 		success: "",
 		error: "",
-		type: "",
-		medium: "",
+		type: oldLink.type,
+		medium: oldLink.medium,
 	});
 	const {
 		title,
@@ -43,8 +44,8 @@ const Create = ({ token }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post(
-				`${API}/link`,
+			const response = await axios.put(
+				`${API}/link/${oldLink._id}`,
 				{
 					title,
 					url,
@@ -56,14 +57,7 @@ const Create = ({ token }) => {
 			);
 			setState({
 				...state,
-				title: "",
-				url: "",
-				success: "Link is created",
-				error: "",
-				loadedCategories: [],
-				categories: [],
-				type: "",
-				medium: "",
+				success: "Link is updated",
 			});
 		} catch (error) {
 			console.error("LINK SUBMIT ERROR", error);
@@ -109,6 +103,7 @@ const Create = ({ token }) => {
 				<li className="list-unstyled" key={c._id}>
 					<input
 						type="checkbox"
+						checked={categories.includes(c._id)}
 						onChange={handleToggle(c._id)}
 						className="mr-2"
 					/>
@@ -141,7 +136,7 @@ const Create = ({ token }) => {
 			</div>
 			<div>
 				<button disabled={!token} class="btn btn-outline-warning" type="submit">
-					{isAuth() || token ? "Post" : "Login to post"}
+					{isAuth() || token ? "Update" : "Login to update"}
 				</button>
 			</div>
 		</form>
@@ -217,7 +212,7 @@ const Create = ({ token }) => {
 		<Layout>
 			<div className="row">
 				<div className="col-md-12">
-					<h1>Submit Link/URL</h1>
+					<h1>Update Link/URL</h1>
 					<br />
 				</div>
 			</div>
@@ -251,9 +246,9 @@ const Create = ({ token }) => {
 	);
 };
 
-Create.getInitialProps = ({ req }) => {
-	const token = getCookie("token", req);
-	return { token };
+Update.getInitialProps = async ({ req, token, query }) => {
+	const response = await axios.get(`${API}/link/${query.id}`);
+	return { oldLink: response.data, token };
 };
 
-export default Create;
+export default withUser(Update);
