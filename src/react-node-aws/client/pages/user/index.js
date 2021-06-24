@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import moment from "moment";
+import Router from "next/router";
 
 import Layout from "../../components/Layout";
 import { API } from "../../config";
@@ -9,10 +10,36 @@ import { getCookie } from "../../helpers/auth";
 import withUser from "../withUser";
 
 const User = ({ user, token, userLinks }) => {
+	// functions
+	const confirmDelete = async (e, id) => {
+		e.preventDefault();
+
+		let answer = window.confirm("Are you sure you want to delete?");
+		if (answer) {
+			await handleDelete(id);
+		}
+	};
+
+	const handleDelete = async (id) => {
+		console.log("delete link > ", id);
+		try {
+			const response = await axios.delete(`${API}/link/${id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			console.log("LINK DELETE SUCCESS", response);
+			Router.replace("/user");
+		} catch (error) {
+			console.log("LINK DELETE", error);
+		}
+	};
+
 	// components
 	const listOfLinks = () =>
 		userLinks.map((l, i) => (
 			<div key={i} className="row alert alert-primary p-2">
+				{/* main components (theme, link, date) */}
 				<div className="col-md-8">
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
@@ -24,6 +51,28 @@ const User = ({ user, token, userLinks }) => {
 				<div className="col-md-4 pt-2">
 					<span className="pull-right">
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
+					</span>
+				</div>
+
+				{/* other info */}
+				<div className="col-md-12">
+					<span className="badge text-dark">
+						{l.type} / {l.medium}
+					</span>
+					{l.categories.map((c, i) => (
+						<span key={i} className="badge text-success">
+							{c.name}
+						</span>
+					))}
+					<span className="badge text-secondary">{l.clicks} clicks</span>
+					<Link href={`/user/link/${l.slug}`}>
+						<span className="badge text-warning pull-right">Update</span>
+					</Link>
+					<span
+						onClick={(e) => confirmDelete(e, l._id)}
+						className="badge text-danger pull-right"
+					>
+						Delete
 					</span>
 				</div>
 			</div>
@@ -38,6 +87,7 @@ const User = ({ user, token, userLinks }) => {
 			</h1>
 			<hr />
 			<div className="row">
+				{/* function links */}
 				<div className="col-md-4">
 					<ul className="nav flex-column">
 						<li className="nav-item">
@@ -52,9 +102,11 @@ const User = ({ user, token, userLinks }) => {
 						</li>
 					</ul>
 				</div>
-				<div className="col-md-4">
+
+				{/* links */}
+				<div className="col-md-8">
 					<h2>Your links</h2>
-					<hr />
+					<br />
 					{listOfLinks()}
 				</div>
 			</div>
