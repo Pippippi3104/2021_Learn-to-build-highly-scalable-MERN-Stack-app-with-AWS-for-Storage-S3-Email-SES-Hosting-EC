@@ -11,26 +11,24 @@ const Create = ({ user, token }) => {
 	// state
 	const [state, setState] = useState({
 		name: "",
-		content: "",
 		error: "",
 		success: "",
 		buttonText: "Create",
-		imageUploadText: "Upload image",
 		image: "",
 	});
+	const [content, setContent] = useState("");
 	const [imageUploadButtonName, setImageUploadButtonName] =
 		useState("Upload image");
-	const { name, content, success, error, image, buttonText, imageUploadText } =
-		state;
+	const { name, success, error, image, buttonText } = state;
 
 	// function
 	const handleChange = (name) => (e) => {
-		setState({
-			...state,
-			[name]: e.target.value,
-			error: "",
-			success: "",
-		});
+		setState({ ...state, [name]: e.target.value, error: "", success: "" });
+	};
+
+	const handleContent = (e) => {
+		setContent(e.target.value);
+		setState({ ...state, success: "", error: "" });
 	};
 
 	const handleImage = (e) => {
@@ -80,10 +78,10 @@ const Create = ({ user, token }) => {
 			);
 			console.log("CATEGORY CREATE RESPONSE", response);
 			setImageUploadButtonName("Upload image");
+			setContent("");
 			setState({
 				...state,
 				name: "",
-				content: "",
 				formData: "",
 				buttonText: "Created",
 				imageUploadText: "Upload image",
@@ -116,7 +114,7 @@ const Create = ({ user, token }) => {
 			<div className="form-group">
 				<label className="text-muted">Content</label>
 				<textarea
-					onChange={handleChange("content")}
+					onChange={handleContent}
 					value={content}
 					type="text"
 					className="form-control"
