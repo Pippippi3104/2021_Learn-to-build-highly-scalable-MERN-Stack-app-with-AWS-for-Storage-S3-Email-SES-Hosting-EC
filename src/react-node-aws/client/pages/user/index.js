@@ -65,7 +65,7 @@ const User = ({ user, token, userLinks }) => {
 						</span>
 					))}
 					<span className="badge text-secondary">{l.clicks} clicks</span>
-					<Link href={`/user/link/${l.slug}`}>
+					<Link href={`/user/link/${l._id}`}>
 						<span className="badge text-warning pull-right">Update</span>
 					</Link>
 					<span
