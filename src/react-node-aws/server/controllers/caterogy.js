@@ -102,7 +102,63 @@ exports.read = (req, res) => {
 };
 
 exports.update = (req, res) => {
-	//
+	const { slug } = req.params;
+	const { name, image, content } = req.body;
+
+	Category.findOneAndUpdate({ slug }, { name, content }, { new: true }).exec(
+		(err, updated) => {
+			if (err) {
+				return res.status(400).json({
+					error: "Could not find category to update",
+				});
+			}
+			console.log("UPDATE", updated);
+
+			if (image) {
+				// remove the existing image from s3 before uploading new/updated one
+				const deleteParams = {
+					Bucket: "hackr-kaloraat-sato",
+					Key: `category/${updated.image.key}`,
+				};
+				s3.deleteObject(deleteParams, (err, data) => {
+					if (err) {
+						console.log("S3 DELETE ERROR DURING UPDATE", err);
+					} else {
+						console.log("S3 DELETED DURING UPDATE", data);
+					}
+				});
+
+				// handle upload image
+				const params = {
+					Bucket: "hackr-kaloraat-sato",
+					Key: `category/${uuidv4()}.${type}`,
+					Body: base64Data,
+					ACL: "public-read",
+					ContentEncoding: "base64",
+					ContentType: `image/${type}`,
+				};
+				s3.upload(params, (err, data) => {
+					if (err) {
+						return res.status(400).json({ error: "Upload to s3 failed" });
+					}
+					console.log("AWS UPLOAD RES DATA", data);
+					updated.image.url = data.Location;
+					updated.image.key = data.Key;
+
+					// save db
+					updated.save((err, success) => {
+						if (err) {
+							console.error(err);
+							return res.status.json({ error: "Error saving category to db" });
+						}
+						return res.json(success);
+					});
+				});
+			} else {
+				res.json(updated);
+			}
+		}
+	);
 };
 
 exports.remove = (req, res) => {
