@@ -5,7 +5,7 @@ import Router from "next/router";
 import Layout from "../../../components/Layout";
 import { showSuccessMessage, showErrorMessage } from "../../../helpers/alerts";
 import { API } from "../../../config";
-import { isAuth } from "../../../helpers/auth";
+import { isAuth, updateUser } from "../../../helpers/auth";
 import withUser from "../../withUser";
 
 const Profile = ({ user, token }) => {
@@ -78,10 +78,12 @@ const Profile = ({ user, token }) => {
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 			console.log(response);
-			setState({
-				...state,
-				buttonText: "Updated",
-				success: "Profile updated successfully",
+			updateUser(response, () => {
+				setState({
+					...state,
+					buttonText: "Updated",
+					success: "Profile updated successfully",
+				});
 			});
 		} catch (error) {
 			console.log(error);
