@@ -11,7 +11,12 @@ const {
 const { runValidation } = require("../validators");
 
 // import from controllers
-const { requireSignin, authMiddleware } = require("../controllers/auth");
+const {
+	requireSignin,
+	authMiddleware,
+	adminMiddleware,
+	canUpdateDeleteLink,
+} = require("../controllers/auth");
 const {
 	create,
 	list,
@@ -30,7 +35,7 @@ router.post(
 	authMiddleware,
 	create
 );
-router.get("/links", list);
+router.post("/links", requireSignin, adminMiddleware, list);
 router.put("/click-count", clickCount);
 router.get("/link/:id", read);
 router.put(
@@ -39,8 +44,24 @@ router.put(
 	runValidation,
 	requireSignin,
 	authMiddleware,
+	canUpdateDeleteLink,
 	update
 );
-router.delete("/link/:id", requireSignin, authMiddleware, remove);
+router.put(
+	"/link/admin/:id",
+	linkUpdateValidator,
+	runValidation,
+	requireSignin,
+	adminMiddleware,
+	update
+);
+router.delete(
+	"/link/:id",
+	requireSignin,
+	authMiddleware,
+	canUpdateDeleteLink,
+	remove
+);
+router.delete("/link/admin/:id", requireSignin, adminMiddleware, remove);
 
 module.exports = router;
