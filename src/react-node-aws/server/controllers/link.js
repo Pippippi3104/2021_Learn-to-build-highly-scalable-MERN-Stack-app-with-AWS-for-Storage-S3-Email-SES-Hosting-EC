@@ -1,5 +1,20 @@
 const Link = require("../models/link");
+const User = require("../models/user");
+const Category = require("../models/category");
+const { linkPublishedParams } = require("../helpers/email");
+
 const slugify = require("slugify");
+const AWS = require("aws-sdk");
+
+/// AWS setting
+AWS.config.update({
+	accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+	region: process.env.AWS_REGION,
+});
+
+// SES
+const ses = new AWS.SES({ apiVersion: "2010-12-01" });
 
 // CRUD
 exports.create = (req, res) => {
@@ -20,6 +35,32 @@ exports.create = (req, res) => {
 			});
 		}
 		res.json(data);
+
+		// find all users in the category
+		User.find({ categories: { $in: categories } }).exec((err, users) => {
+			if (err) {
+				console.log("Error finding users to send email on link publish");
+				throw new Error(err);
+			}
+			Category.find({ _id: { $in: categories } }).exec((err, result) => {
+				data.categories = result;
+
+				for (let i = 0; i < users.length; i++) {
+					const params = linkPublishedParams(users[i].email, data);
+					const sendEmail = ses.sendEmail(params).promise();
+
+					sendEmail
+						.then((success) => {
+							console.log("email submitted to SES ", success);
+							return;
+						})
+						.catch((failure) => {
+							console.log("error on email submitted to SES  ", failure);
+							return;
+						});
+				}
+			});
+		});
 	});
 };
 exports.list = (req, res) => {
