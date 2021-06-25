@@ -39,7 +39,7 @@ router.post(
 );
 router.post("/links", requireSignin, adminMiddleware, list);
 router.put("/click-count", clickCount);
-router.get("/link/popular", popular);
+router.get("/links/popular", popular);
 router.get("/link/popular/:slug", popularInCategory);
 router.get("/link/:id", read);
 router.put(
