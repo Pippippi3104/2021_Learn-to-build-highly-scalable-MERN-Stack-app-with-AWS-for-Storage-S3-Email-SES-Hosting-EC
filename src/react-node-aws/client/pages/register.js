@@ -10,7 +10,7 @@ import { isAuth } from "../helpers/auth";
 const Register = () => {
 	// state
 	const [state, setState] = useState({
-		name: "test",
+		name: "test_user",
 		email: "origamistfrancais@gmail.com",
 		password: "testtest",
 		error: "",
@@ -59,6 +59,12 @@ const Register = () => {
 	};
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		console.table({
+			name,
+			email,
+			password,
+			categories,
+		});
 
 		// send の pending
 		setState({ ...state, buttonText: "Registering" });
