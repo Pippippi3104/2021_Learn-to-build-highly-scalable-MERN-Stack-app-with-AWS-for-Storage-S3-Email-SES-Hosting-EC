@@ -16,17 +16,38 @@ const Register = () => {
 		error: "",
 		success: "",
 		buttonText: "Register",
+		loadedCategories: [],
+		categories: [],
 	});
+
+	// state
+	const {
+		name,
+		email,
+		password,
+		error,
+		success,
+		buttonText,
+		loadedCategories,
+		categories,
+	} = state;
+
+	//fetch
+	useEffect(() => {
+		loadCategories();
+	}, []);
 
 	// ログイン済みか確認
 	useEffect(() => {
 		isAuth() && Router.push("/");
 	}, []);
 
-	// state
-	const { name, email, password, error, success, buttonText } = state;
-
 	// functions
+	const loadCategories = async () => {
+		const response = await axios.get(`${API}/categories`);
+		setState({ ...state, loadedCategories: response.data });
+	};
+
 	const handleChange = (name) => (e) => {
 		setState({
 			...state,
@@ -49,6 +70,7 @@ const Register = () => {
 				name,
 				email,
 				password,
+				categories,
 			});
 			console.log(response);
 			setState({
@@ -67,6 +89,37 @@ const Register = () => {
 				error: error.response.data.error, // server の auth controller にてメッセージが追加されている
 			});
 		}
+	};
+
+	const handleToggle = (c) => () => {
+		// return the first index or -1
+		const clickedCategory = categories.indexOf(c);
+		const all = [...categories];
+
+		if (clickedCategory === -1) {
+			all.push(c);
+		} else {
+			all.splice(clickedCategory, 1);
+		}
+		console.log("all >> categories", all);
+		setState({ ...state, categories: all, success: "", error: "" });
+	};
+
+	// show categories > check
+	const showCategories = () => {
+		return (
+			loadedCategories &&
+			loadedCategories.map((c, i) => (
+				<li className="list-unstyled" key={c._id}>
+					<input
+						type="checkbox"
+						onChange={handleToggle(c._id)}
+						className="mr-2"
+					/>
+					<label className="form-check-label">{`_${c.name}`}</label>
+				</li>
+			))
+		);
 	};
 
 	// components
@@ -101,6 +154,12 @@ const Register = () => {
 					placeholder="Type your password"
 					required
 				/>
+			</div>
+			<div className="form-group">
+				<label className="text-muted ml-4">Category</label>
+				<ul style={{ maxHeight: "100px", overflowY: "scroll" }}>
+					{showCategories()}
+				</ul>
 			</div>
 			<div className="form-group">
 				<button className="btn btn-outline-warning">{buttonText}</button>
