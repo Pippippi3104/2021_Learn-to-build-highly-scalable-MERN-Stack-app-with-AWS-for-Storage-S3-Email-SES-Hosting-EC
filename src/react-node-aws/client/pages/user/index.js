@@ -100,6 +100,11 @@ const User = ({ user, token, userLinks }) => {
 								<a className="nav link">Update profile</a>
 							</Link>
 						</li>
+						<li className="nav-item">
+							<Link href="/user/profile/update">
+								<a className="nav link">Profile update</a>
+							</Link>
+						</li>
 					</ul>
 				</div>
 
