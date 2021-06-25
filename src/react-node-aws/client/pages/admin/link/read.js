@@ -24,13 +24,36 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 		// fetch
 		const response = await axios.post(
 			`${API}/links`,
-			{ skip, limit },
+			{ skip: toSkip, limit },
 			{ headers: { Authorization: `Bearer ${token}` } }
 		);
 
-		setAllLinks([...allLinks, ...resopnse.data]);
-		setSize(resopnse.data.length);
+		setAllLinks([...allLinks, ...response.data]);
+		setSize(response.data.length);
 		setSkip(toSkip);
+	};
+
+	const confirmDelete = async (e, id) => {
+		e.preventDefault();
+
+		let answer = window.confirm("Are you sure you want to delete?");
+		if (answer) {
+			await handleDelete(id);
+		}
+	};
+
+	const handleDelete = async (id) => {
+		try {
+			const response = await axios.delete(`${API}/link/admin/${id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			console.log("LINK DELETE SUCCESS", response);
+			process.browser && window.location.reload();
+		} catch (error) {
+			console.log("LINK DELETE", error);
+		}
 	};
 
 	// components
@@ -62,6 +85,17 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 							{c.name}
 						</span>
 					))}
+					<span
+						onClick={(e) => confirmDelete(e, l._id)}
+						className="badge text-danger pull-right"
+					>
+						Delete
+					</span>
+					<Link href={`/admin/link/${l._id}`}>
+						<a>
+							<span className="badge text-warning pull-right">Update</span>
+						</a>
+					</Link>
 				</div>
 			</div>
 		));
