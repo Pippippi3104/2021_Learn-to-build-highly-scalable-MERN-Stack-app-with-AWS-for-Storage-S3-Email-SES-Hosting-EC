@@ -1,23 +1,24 @@
-import Layout from "../components/Layout";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Router from "next/router";
 
-import { showSuccessMessage, showErrorMessage } from "../helpers/alerts";
-import { API } from "../config";
-import { isAuth } from "../helpers/auth";
+import Layout from "../../../components/Layout";
+import { showSuccessMessage, showErrorMessage } from "../../../helpers/alerts";
+import { API } from "../../../config";
+import { isAuth, updateUser } from "../../../helpers/auth";
+import withUser from "../../withUser";
 
-const Register = () => {
+const Profile = ({ user, token }) => {
 	// state
 	const [state, setState] = useState({
-		name: "test_user",
-		email: "origamistfrancais@gmail.com",
+		name: user.name,
+		email: user.email,
 		password: "testtest",
 		error: "",
 		success: "",
-		buttonText: "Register",
+		buttonText: "Update",
 		loadedCategories: [],
-		categories: [],
+		categories: user.categories,
 	});
 
 	// state
@@ -37,11 +38,6 @@ const Register = () => {
 		loadCategories();
 	}, []);
 
-	// ログイン済みか確認
-	useEffect(() => {
-		isAuth() && Router.push("/");
-	}, []);
-
 	// functions
 	const loadCategories = async () => {
 		const response = await axios.get(`${API}/categories`);
@@ -54,7 +50,7 @@ const Register = () => {
 			[name]: e.target.value,
 			error: "",
 			success: "",
-			buttonText: "Regiser",
+			buttonText: "Update",
 		});
 	};
 	const handleSubmit = async (e) => {
@@ -67,31 +63,33 @@ const Register = () => {
 		});
 
 		// send の pending
-		setState({ ...state, buttonText: "Registering" });
+		setState({ ...state, buttonText: "Updating..." });
 
 		// serverへデータを送信
 		try {
 			// API の実行 (server 側で構築済み)
-			const response = await axios.post(`${API}/register`, {
-				name,
-				email,
-				password,
-				categories,
-			});
+			const response = await axios.put(
+				`${API}/user`,
+				{
+					name,
+					password,
+					categories,
+				},
+				{ headers: { Authorization: `Bearer ${token}` } }
+			);
 			console.log(response);
-			setState({
-				...state,
-				name: "",
-				email: "",
-				password: "",
-				buttonText: "Submitted",
-				success: response.data.message, // server の auth controller にてメッセージが追加されている
+			updateUser(response, () => {
+				setState({
+					...state,
+					buttonText: "Updated",
+					success: "Profile updated successfully",
+				});
 			});
 		} catch (error) {
 			console.log(error);
 			setState({
 				...state,
-				buttonText: "Register",
+				buttonText: "Update",
 				error: error.response.data.error, // server の auth controller にてメッセージが追加されている
 			});
 		}
@@ -119,6 +117,7 @@ const Register = () => {
 				<li className="list-unstyled" key={c._id}>
 					<input
 						type="checkbox"
+						checked={categories.includes(c._id)}
 						onChange={handleToggle(c._id)}
 						className="mr-2"
 					/>
@@ -129,7 +128,7 @@ const Register = () => {
 	};
 
 	// components
-	const registerForm = () => (
+	const updateForm = () => (
 		<form onSubmit={handleSubmit}>
 			<div className="form-group">
 				<input
@@ -149,6 +148,7 @@ const Register = () => {
 					className="form-control"
 					placeholder="Type your email"
 					required
+					disabled
 				/>
 			</div>
 			<div className="form-group">
@@ -178,7 +178,7 @@ const Register = () => {
 		<Layout>
 			{/* main screen components */}
 			<div className="col-md-6 offset-md-3">
-				<h1>Register</h1>
+				<h1>Update Profile</h1>
 				<br />
 
 				{/* alert message */}
@@ -186,10 +186,10 @@ const Register = () => {
 				{error && showErrorMessage(error)}
 
 				{/* forms */}
-				{registerForm()}
+				{updateForm()}
 			</div>
 		</Layout>
 	);
 };
 
-export default Register;
+export default withUser(Profile);

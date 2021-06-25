@@ -25,7 +25,7 @@ const ses = new AWS.SES({ apiVersion: "2010-12-01" });
 exports.register = (req, res) => {
 	// clientから受け取ったデータがroute経由で受け取れる
 	// console.log("REGISTER CONTROLLER", req.body);
-	const { name, email, password } = req.body;
+	const { name, email, password, categories } = req.body;
 
 	// check if user exists in our DB
 	User.findOne({ email }).exec((err, user) => {
@@ -36,12 +36,13 @@ exports.register = (req, res) => {
 		}
 		// generate token with user name email and password
 		const token = jwt.sign(
-			{ name, email, password },
+			{ name, email, password, categories },
 			process.env.JWT_ACCOUNT_ACTIVATION,
 			{
 				expiresIn: "10m",
 			}
 		);
+		console.log(token);
 
 		// send email (content)
 		const params = registerEmailParams(email, token);
@@ -81,7 +82,7 @@ exports.registerActivate = (req, res) => {
 			}
 
 			// リンク切れしていなければ、データ取得し処理を進める
-			const { name, email, password } = jwt.decode(token);
+			const { name, email, password, categories } = jwt.decode(token);
 			const username = shortId.generate();
 
 			// DB
@@ -93,7 +94,13 @@ exports.registerActivate = (req, res) => {
 				}
 
 				// register new user
-				const newUser = new User({ username, name, email, password });
+				const newUser = new User({
+					username,
+					name,
+					email,
+					password,
+					categories,
+				});
 				newUser.save((err, result) => {
 					if (err) {
 						console.error(err);
