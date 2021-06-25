@@ -8,11 +8,23 @@ const {
 	adminMiddleware,
 } = require("../controllers/auth");
 
+// import validators
+const { userUpdateValidator } = require("../validators/auth");
+const { runValidation } = require("../validators");
+
 // import controllers
-const { read } = require("../controllers/user");
+const { read, update } = require("../controllers/user");
 
 // routes
 router.get("/user", requireSignin, authMiddleware, read);
 router.get("/admin", requireSignin, adminMiddleware, read);
+router.put(
+	"/user",
+	userUpdateValidator,
+	runValidation,
+	requireSignin,
+	adminMiddleware,
+	update
+);
 
 module.exports = router;
