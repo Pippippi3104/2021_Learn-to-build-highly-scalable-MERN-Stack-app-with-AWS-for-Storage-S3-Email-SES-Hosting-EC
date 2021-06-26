@@ -15,6 +15,7 @@
 - [User can Update / Delete](#sec12)
 - [Admin Update / Delete Access](#sec13)
 - [Profile Update / Mass Email / AWS SWS](#sec14)
+- [Trending Links / View Count](#sec15)
 
 <a id="#sec02"></a>
 
@@ -332,6 +333,16 @@
 <a id="#sec14"></a>
 
 ## Profile Update / Mass Email / AWS SWS
+
+### aaa
+
+- aaa
+
+#### [Return to Contents](#contents)
+
+<a id="#sec15"></a>
+
+## Trending Links / View Count
 
 ### aaa
 
