@@ -16,6 +16,7 @@
 - [Admin Update / Delete Access](#sec13)
 - [Profile Update / Mass Email / AWS SWS](#sec14)
 - [Trending Links / View Count](#sec15)
+- [AWS IAM / EC2 / Route 53 and Deployment](#sec16)
 
 <a id="#sec02"></a>
 
@@ -347,5 +348,19 @@
 ### aaa
 
 - aaa
+
+#### [Return to Contents](#contents)
+
+<a id="#sec16"></a>
+
+## AWS IAM / EC2 / Route 53 and Deployment
+
+### Resource to install Node in EC2
+
+- ```
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+  . ~/.nvm/nvm.sh
+  nvm install node
+  ```
 
 #### [Return to Contents](#contents)
